@@ -162,7 +162,6 @@ function STU_Library.Window(Hub_Name, Hub_Version, Ui_Name)
 	local UserInputService = game:GetService("UserInputService")
 
 	local gui = Background
-	local gui2 = LeftSider
 
 	local dragging
 	local dragInput
@@ -212,7 +211,7 @@ function STU_Library.Window(Hub_Name, Hub_Version, Ui_Name)
 		local SectionList = Instance.new("UIListLayout")
 		
 		TabFrame.Name = "TabFrame"
-		TabFrame.Parent = game.StarterGui.STU_Ui_Library.Background.LeftSider.TabFrame.TabFrame
+		TabFrame.Parent = TabFrame
 		TabFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		TabFrame.BackgroundTransparency = 1.000
 		TabFrame.Size = UDim2.new(0, 135, 0, 30)
@@ -231,7 +230,7 @@ function STU_Library.Window(Hub_Name, Hub_Version, Ui_Name)
 		TabButton.TextWrapped = true
 		
 		NewPageTab.Name = "NewPageTab"..TabText
-		NewPageTab.Parent = game.StarterGui.STU_Ui_Library.Background.PageFrame.PageFolder
+		NewPageTab.Parent = PageFolder
 		NewPageTab.Active = true
 		NewPageTab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		NewPageTab.BackgroundTransparency = 1.000
