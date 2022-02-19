@@ -220,13 +220,13 @@ function STU_Library.Window(Hub_Name, Hub_Version, Ui_Name)
 
 		TabButton.Name = "TabButton"
 		TabButton.Parent = TabFrame
-		TabButton.BackgroundColor3 = Color3.fromRGB(166, 248, 255)
+		TabButton.BackgroundColor3 = Color3.fromRGB(114, 137, 218)
 		TabButton.BackgroundTransparency = 1.000
 		TabButton.Size = UDim2.new(1, 0, 1, 0)
 		TabButton.ZIndex = 2
 		TabButton.Font = Enum.Font.FredokaOne
 		TabButton.Text = TabText or "Tab"
-		TabButton.TextColor3 = Color3.fromRGB(153, 255, 238)
+		TabButton.TextColor3 = Color3.fromRGB(114, 137, 218)
 		TabButton.TextSize = 14.000
 		TabButton.TextWrapped = true
 		
