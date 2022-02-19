@@ -158,48 +158,127 @@ function STU_Library.Window(Hub_Name, Hub_Version, Ui_Name)
 			end
 		end
 	end)
-	
-	 local UserInputService = game:GetService("UserInputService")
 
-        local gui = Background
+	local UserInputService = game:GetService("UserInputService")
+
+	local gui = Background
 	local gui2 = LeftSider
 
-        local dragging
-        local dragInput
-        local dragStart
-        local startPos
+	local dragging
+	local dragInput
+	local dragStart
+	local startPos
 
-        local function update(input)
-        	local delta = input.Position - dragStart
-        	gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
+	local function update(input)
+		local delta = input.Position - dragStart
+		gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
 
-        gui.InputBegan:Connect(function(input)
-        	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        		dragging = true
-        		dragStart = input.Position
-        		startPos = gui.Position
-        		
-        		input.Changed:Connect(function()
-        			if input.UserInputState == Enum.UserInputState.End then
-        				dragging = false
-        			end
-        		end)
-        	end
-        end)
+	gui.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			dragStart = input.Position
+			startPos = gui.Position
 
-        gui.InputChanged:Connect(function(input)
-        	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        		dragInput = input
-        	end
-        end)
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+
+	gui.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput = input
+		end
+	end)
+
+
+	UserInputService.InputChanged:Connect(function(input)
+		if input == dragInput and dragging then
+			update(input)
+		end
+	end)
 	
+	--------------------------------------------------------------------------------------------------------------------------------------------
 
-        UserInputService.InputChanged:Connect(function(input)
-        	if input == dragInput and dragging then
-        		update(input)
-        	end
-        end)
+	local TabHandler = {}
+
+	function TabHandler:Tab(TabText)
+		local TabFrame = Instance.new("Frame")
+		local TabButton = Instance.new("TextButton")
+		local NewPageTab = Instance.new("ScrollingFrame")
+		local SectionList = Instance.new("UIListLayout")
+		
+		TabFrame.Name = "TabFrame"
+		TabFrame.Parent = game.StarterGui.STU_Ui_Library.Background.LeftSider.TabFrame.TabFrame
+		TabFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TabFrame.BackgroundTransparency = 1.000
+		TabFrame.Size = UDim2.new(0, 135, 0, 30)
+		TabFrame.ZIndex = 2
+
+		TabButton.Name = "TabButton"
+		TabButton.Parent = TabFrame
+		TabButton.BackgroundColor3 = Color3.fromRGB(166, 248, 255)
+		TabButton.BackgroundTransparency = 1.000
+		TabButton.Size = UDim2.new(1, 0, 1, 0)
+		TabButton.ZIndex = 2
+		TabButton.Font = Enum.Font.FredokaOne
+		TabButton.Text = TabText or "Tab"
+		TabButton.TextColor3 = Color3.fromRGB(153, 255, 238)
+		TabButton.TextSize = 14.000
+		TabButton.TextWrapped = true
+		
+		NewPageTab.Name = "NewPageTab"..TabText
+		NewPageTab.Parent = game.StarterGui.STU_Ui_Library.Background.PageFrame.PageFolder
+		NewPageTab.Active = true
+		NewPageTab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewPageTab.BackgroundTransparency = 1.000
+		NewPageTab.BorderSizePixel = 0
+		NewPageTab.Size = UDim2.new(1, 0, 1, 0)
+		NewPageTab.Visible = false
+		NewPageTab.ZIndex = 2
+		NewPageTab.ScrollBarThickness = 0
+
+		SectionList.Name = "SectionList"
+		SectionList.Parent = NewPageTab
+		SectionList.SortOrder = Enum.SortOrder.LayoutOrder
+		SectionList.Padding = UDim.new(0, 3)
+		
+		local function UpdateSize()
+			local CenterS = SectionList.AbsoluteContentSize
+			game.TweenService:Create(NewPageTab, TweenInfo.new(0.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {CanvasSize = UDim2.new(0,CenterS.X,0,CenterS.Y)}):Play()
+		end
+		
+		UpdateSize()
+		
+		NewPageTab.ChildAdded:Connect(UpdateSize)
+		NewPageTab.ChildRemoved:Connect(UpdateSize)
+		
+		TabButton.MouseButton1Click:Connect(function()
+			UpdateSize()
+			for i,v in next, PageFolder:GetChildren() do
+				UpdateSize()
+				v.Visible = false
+			end
+			NewPageTab.Visible = true
+			for i,v in next, TabFrame:GetChildren() do
+				if v:IsA("Frame") then
+					for i,v in next, v:GetChildren() do
+						if v:IsA("TextButton") then
+							game.TweenService:Create(v, TweenInfo.new(0.18, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {TextColor3 = Color3.fromRGB(35,59,55)}):Play()
+						end
+						if v:IsA("ImageLabel") then
+							game.TweenService:Create(v, TweenInfo.new(0.18, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(35, 59, 55)}):Play()
+						end
+					end
+				end
+			end
+		end)
+		game.TweenService:Create(TabButton, TweenInfo.new(0.18, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {TextColor3 = Color3.fromRGB(153, 255, 238)}):Play()
+	end
+	return TabHandler
 end
 
 return STU_Library
